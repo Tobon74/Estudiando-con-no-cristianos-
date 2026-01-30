@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio Bíblico: Principios Básicos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --bg-color: #ecf0f1;
+            --card-bg: #ffffff;
+            --text-color: #34495e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-color);
+        }
+
+        /* --- HERO SECTION & 3D BOOK --- */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            text-align: center;
+            perspective: 1000px;
+        }
+
+        .hero h1 {
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* El contenedor del libro 3D CSS */
+        .book-container {
+            position: relative;
+            width: 220px;
+            height: 300px;
+            transform-style: preserve-3d;
+            animation: float 6s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+        }
+
+        .book-container:hover {
+            transform: rotateY(-30deg) rotateX(10deg);
+        }
+
+        .book {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+        }
+
+        .book-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 4px;
+        }
+
+        .book-front {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            transform: translateZ(25px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2), 5px 5px 20px rgba(0,0,0,0.3);
+            border: 2px solid #1a252f;
+        }
+
+        .book-front h2 {
+            color: white;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .book-back {
+            background-color: var(--primary-color);
+            transform: rotateY(180deg) translateZ(25px);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .book-spine {
+            position: absolute;
+            width: 50px;
+            height: 100%;
+            background-color: #1a252f;
+            transform: rotateY(-90deg) translateZ(110px); /* Adjust Z to half width */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* --- CONTENT GRID SECTION --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px -10px rgba(50, 50, 93, 0.25), 0 5px 15px -10px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-top: 4px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-top: 4px solid var(--secondary-color);
+        }
+
+        .card-header {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.8);
+        }
+
+        .card-header h3 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .card-toggle-icon {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .card.active .card-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .card-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, opacity 0.3s ease-in;
+            opacity: 0;
+            padding: 0 20px;
+            background: #f9f9f9;
+        }
+
+        .card.active .card-body {
+            max-height: 1000px; /* Arbitrary large value for expand animation */
+            opacity: 1;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Styles for content lists inside cards */
+        .card-body ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+        .card-body li {
+            margin-bottom: 8px;
+        }
+        .card-body strong {
+            color: var(--primary-color);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        footer p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <h1>Estudios Extras a Principios Básicos</h1>
+        <div class="book-container">
+            <div class="book">
+                <div class="book-face book-front">
+                    <h2>Estudiando con No-Cristianos</h2>
+                </div>
+                <div class="book-spine">Guía de Estudio</div>
+                <div class="book-face book-back"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="grid" id="study-grid">
+            </div>
+    </main>
+
+    <footer>
+        <p>Basado en el estudio "Studying with non-Christians" del Dr. Douglas Jacoby.</p>
+        <p>Diseño Web SPA para Estudio Bíblico.</p>
+    </footer>
+
+
+    <script>
+        // Datos extraídos del PDF
+        const studyData = [
+            {
+                id: "P1",
+                title: "P1: ¿Esperar cambios específicos es salvación por obras?",
+                content: `<ul>
+                    <li><strong>No necesariamente. Hay dos extremos:</strong> a. Expectativas más altas que las de Jesús. b. Esperar poco o nada (común en el cristianismo moderno).</li>
+                    <li><strong>Ejemplo de Juan el Bautista (Lucas 3):</strong> Pedía confesión de pecados antes del bautismo y daba respuestas específicas sobre qué cambiar.</li>
+                    <li>Los fariseos, al rechazar estos requerimientos, rechazaron a Dios (Lc 7:29-30).</li>
+                </ul>`
+            },
+            {
+                id: "P2",
+                title: "P2: ¿Es efectivo instruir en un solo día?",
+                content: `<ul>
+                    <li><strong>Pentecostés (Hch 2):</strong> Pedro hablaba a quienes ya sabían de Jesús y compartían el Judaísmo.</li>
+                    <li><strong>El Etíope (Hch 8):</strong> Un pagano simpatizante del judaísmo que ya leía Isaías y buscaba a Dios.</li>
+                    <li><strong>Pablo (Hch 9):</strong> Tenía conocimiento previo y tuvo una experiencia sobrenatural.</li>
+                    <li><strong>Conclusión:</strong> Las conversiones de "un día" en el NT son excepcionales y tenían preparación previa. No es efectivo hoy para quienes no conocen el cristianismo. Debemos ser pacientes.</li>
+                </ul>`
+            },
+            {
+                id: "P3",
+                title: "P3: ¿Por qué es necesaria la instrucción personal?",
+                content: `<ul>
+                    <li><strong>Efesios 4:20-24:</strong> Pablo menciona una instrucción previa a la conversión.</li>
+                    <li><strong>Hechos 16:31-32:</strong> Al carcelero se le tuvo que predicar la Palabra, no solo pedirle fe.</li>
+                    <li>Nadie llega a Cristo solo; se necesita instrucción, lo que requiere tiempo y humildad.</li>
+                    <li>Un estudio personal comparte: <strong>el evangelio, tu fe y tu vida</strong> (1 Tes 2:8).</li>
+                </ul>`
+            },
+            {
+                id: "P4",
+                title: "P4: ¿Cuándo debo hacer la cita para estudiar?",
+                content: `<p>Tan pronto como sea posible, pero es vital que la persona se sienta cómoda. El momento ideal suele ser después de una reunión de la iglesia o una charla profunda. La amistad es clave.</p>`
+            },
+            {
+                id: "P5",
+                title: "P5: ¿Cómo hago la cita?",
+                content: `<ul>
+                    <li>Depende de la persona:</li>
+                    <li><strong>Muy abiertas:</strong> Estudiar tanto como se pueda.</li>
+                    <li><strong>Religiosas difíciles:</strong> Ganar confianza, convivir con su orgullo para luego confrontar doctrinas erradas con balance.</li>
+                    <li><strong>Interesadas pero no abiertas:</strong> Sensibilidad, balanceando urgencia con paciencia.</li>
+                </ul>`
+            },
+            {
+                id: "P6",
+                title: "P6: ¿Cómo debo ser al proponer estudiar?",
+                content: `<ul>
+                    <li><strong>Seguro:</strong> La gente escucha a maestros confiados. La inseguridad es falta de fe.</li>
+                    <li><strong>Relajado:</strong> No vayas tenso esperando un "no". Ora y asume lo mejor.</li>
+                    <li><strong>Animado:</strong> Entusiasmado, no aburrido. Jesús nos da paz y gozo eternos.</li>
+                </ul>`
+            },
+            {
+                id: "P7",
+                title: "P7: ¿Cuánta gente debe estar involucrada?",
+                content: `<p>No hay regla bíblica, pero tres personas suele funcionar bien. Es bueno incluir jóvenes discípulos para que aprendan. Sé sabio: para algunos, dos son compañía y tres son multitud.</p>`
+            },
+            {
+                id: "P8",
+                title: "P8: ¿Cuánto deben durar los estudios?",
+                content: `<ul>
+                    <li>Lo mejor es entre 30 y 90 minutos. "La mente puede absorber solo lo que el asiento puede soportar".</li>
+                    <li>¡No intentes explicar la Biblia desde Génesis hasta Apocalipsis!</li>
+                    <li>Comienza y termina con oración. Enfócate en el tema y deja que las Escrituras hablen.</li>
+                </ul>`
+            },
+            {
+                id: "P11",
+                title: "P11: ¿Cuándo debo retar fuertemente?",
+                content: `<p>Es delicado. La idea bíblica es retar según el conocimiento bíblico de la persona (Ej: Jesús fuerte con fariseos, amable con Zaqueo). Trata con amor; usa la fuerza solo si hay pecado deliberado o necedad (Lucas 12:47).</p>`
+            },
+            {
+                id: "P12",
+                title: "P12: ¿Cuándo debo \"sacudirme el polvo\"?",
+                content: `<ul>
+                    <li>Si están totalmente cerrados o no quieren oír (no hacen cambios, se ponen necios).</li>
+                    <li>Si surgen dudas intelectuales fuera de lugar solo para evadir.</li>
+                    <li>No significa dejar de amar, sino dedicar tiempo a alguien más interesado. Siempre deja la puerta abierta amablemenet.</li>
+                </ul>`
+            },
+            {
+                id: "P13",
+                title: "P13: ¿Cuándo es mejor no estudiar?",
+                content: `<p>Cuando te preocupa más "avanzar el estudio" que el corazón de la persona. A veces es mejor solo pasar un buen tiempo juntos. A la gente no le importa cuánto sabes hasta que ven cuánto te preocupas por ellos.</p>`
+            },
+            {
+                id: "P14",
+                title: "P14: ¿Cuántos estudios debo tener?",
+                content: `<p>Depende de tu etapa de vida y responsabilidades. Si dices "no tengo tiempo para compartir mi fe", tus negocios están ahogando el mensaje. La pregunta es: "¿Cómo uso mi tiempo efectivamente para impactar?".</p>`
+            },
+            {
+                id: "P15",
+                title: "P15: ¿Qué hago si me hacen preguntas?",
+                content: `<p>Jesús respondió de varias formas: tareas, ilustraciones, escrituras, preguntas, argumentos razonables, silencio y retos morales.</p>`
+            },
+            {
+                id: "P16",
+                title: "P16: ¿Cuál es el secreto?",
+                content: `<ul>
+                    <li>No es tu estilo ni conocimiento, es <strong>el poder de Dios</strong> (1 Co 3:16).</li>
+                    <li>La oración es la clave por sabiduría y corazones abiertos.</li>
+                    <li>Debemos ser los mejores sembradores, ¡pero Dios da la cosecha!</li>
+                </ul>`
+            }
+        ];
+
+        // Función para inicializar la página
+        function init() {
+            const gridContainer = document.getElementById('study-grid');
+
+            studyData.forEach(item => {
+                // 1. Crear la estructura de la carta
+                const card = document.createElement('article');
+                card.classList.add('card');
+
+                const header = document.createElement('div');
+                header.classList.add('card-header');
+                header.innerHTML = `<h3>${item.title}</h3><span class="card-toggle-icon">▼</span>`;
+
+                const body = document.createElement('div');
+                body.classList.add('card-body');
+                body.innerHTML = item.content;
+
+                // 2. Añadir evento de clic para el efecto acordeón
+                header.addEventListener('click', () => {
+                    // Opcional: Cerrar otras cartas abiertas (comportamiento acordeón estricto)
+                    const allCards = document.querySelectorAll('.card');
+                    allCards.forEach(c => {
+                        if (c !== card && c.classList.contains('active')) {
+                            c.classList.remove('active');
+                        }
+                    });
+
+                    // Alternar la carta actual
+                    card.classList.toggle('active');
+                });
+
+                // 3. Ensamblar la carta
+                card.appendChild(header);
+                card.appendChild(body);
+                gridContainer.appendChild(card);
+            });
+        }
+
+        // Ejecutar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>
